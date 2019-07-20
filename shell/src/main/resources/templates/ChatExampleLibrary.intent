@@ -1,0 +1,18 @@
+Library ChatExampleLibrary
+
+intent Greetings { 
+	inputs {
+		"Greetings"
+		"Hi"
+		"Hello"
+		"Yo"
+	}
+}
+
+intent HowAreYou {
+	inputs {
+		"How are you?"
+		"r u?"
+	}
+}
+

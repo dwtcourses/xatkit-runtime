@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ASCII"?>
+<execution:ExecutionModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:common="com.xatkit.common" xmlns:execution="com.xatkit.execution">
+  <eventProviderDefinitions href="pathmap://XATKIT_CORE_PLATFORM/ChatPlatform.xmi#//@eventProviderDefinitions.0"/>
+  <executionRules>
+    <event href="pathmap://XATKIT_CUSTOM_LIBRARY/ChatExampleLibrary#//@eventDefinitions.0"/>
+    <instructions xsi:type="execution:ActionInstance">
+      <action href="pathmap://XATKIT_CORE_PLATFORM/ChatPlatform.xmi#//@actions.1"/>
+      <values>
+        <parameter href="pathmap://XATKIT_CORE_PLATFORM/ChatPlatform.xmi#//@actions.1/@parameters.0"/>
+        <expression xsi:type="common:OperationCall" name="+">
+          <source xsi:type="common:StringLiteral" value="Hi "/>
+          <args xsi:type="common:OperationCall" name="+">
+            <source xsi:type="common:OperationCall" name="get">
+              <source xsi:type="common:ContextAccess" contextName="chat"/>
+              <args xsi:type="common:StringLiteral" value="username"/>
+            </source>
+            <args xsi:type="common:StringLiteral" value="!"/>
+          </args>
+        </expression>
+      </values>
+    </instructions>
+  </executionRules>
+  <executionRules>
+    <event href="pathmap://XATKIT_CUSTOM_LIBRARY/ChatExampleLibrary#//@eventDefinitions.1"/>
+    <instructions xsi:type="execution:ActionInstance">
+      <action href="pathmap://XATKIT_CORE_PLATFORM/ChatPlatform.xmi#//@actions.1"/>
+      <values>
+        <parameter href="pathmap://XATKIT_CORE_PLATFORM/ChatPlatform.xmi#//@actions.1/@parameters.0"/>
+        <expression xsi:type="common:StringLiteral" value="I am fine!"/>
+      </values>
+    </instructions>
+  </executionRules>
+  <executionRules>
+    <event href="pathmap://XATKIT_CORE_LIBRARY/CoreLibrary.xmi#//@eventDefinitions.0"/>
+    <instructions xsi:type="execution:ActionInstance">
+      <action href="pathmap://XATKIT_CORE_PLATFORM/ChatPlatform.xmi#//@actions.1"/>
+      <values>
+        <parameter href="pathmap://XATKIT_CORE_PLATFORM/ChatPlatform.xmi#//@actions.1/@parameters.0"/>
+        <expression xsi:type="common:StringLiteral" value="Sorry I didn't understand :("/>
+      </values>
+    </instructions>
+  </executionRules>
+  <imports xsi:type="common:LibraryImportDeclaration" path="chat-example/ChatExampleLibrary.xmi" alias="ChatExampleLibrary"/>
+  <imports xsi:type="common:PlatformImportDeclaration" path="ChatPlatform"/>
+  <imports xsi:type="common:LibraryImportDeclaration" path="CoreLibrary"/>
+</execution:ExecutionModel>

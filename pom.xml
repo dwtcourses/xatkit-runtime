@@ -53,6 +53,7 @@
         <module>core</module>
         <module>metamodels</module>
         <module>core_resources</module>
+        <module>shell</module>
     </modules>
 
     <developers>

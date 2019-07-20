@@ -1,0 +1,14 @@
+import library "chat-example/ChatExampleLibrary.xmi" as ChatExampleLibrary
+import platform "ChatPlatform"
+import library "CoreLibrary"
+
+use provider ChatPlatform.ChatProvider
+
+on intent Greetings do
+	action ChatPlatform.Reply(message : "Hi " + context(chat).get("username") + "!")
+	
+on intent HowAreYou do
+	action ChatPlatform.Reply(message : "I am fine!")
+	
+on intent Default_Fallback_Intent do
+	action ChatPlatform.Reply(message : "Sorry I didn't understand :(")
