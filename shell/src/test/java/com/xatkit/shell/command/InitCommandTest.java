@@ -1,6 +1,7 @@
 package com.xatkit.shell.command;
 
-import com.xatkit.shell.XatkitCommand;
+import com.xatkit.shell.CommandContext;
+import com.xatkit.shell.XatkitCommandType;
 import fr.inria.atlanmod.commons.log.Log;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -14,14 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InitCommandTest {
 
-    private static String TEST_FOLDER_LOCATION = "initCommandTest";
+    public static String TEST_FOLDER_LOCATION = "initCommandTest";
 
     @AfterClass
     public static void tearDownAfterClass() {
         deleteTestFolder();
     }
 
-    private static void deleteTestFolder() {
+    public static void deleteTestFolder() {
         try {
             FileUtils.deleteDirectory(new File(TEST_FOLDER_LOCATION));
         } catch (IOException e) {
@@ -36,23 +37,29 @@ public class InitCommandTest {
     }
 
     @Test
-    public void initRelativePath() {
-        new InitCommand(new String[]{XatkitCommand.INIT.label, TEST_FOLDER_LOCATION});
+    public void executeRelativePath() {
+        InitCommand command = new InitCommand(new String[]{XatkitCommandType.INIT.label, TEST_FOLDER_LOCATION},
+                new CommandContext());
+        command.execute();
         File f = new File(TEST_FOLDER_LOCATION);
         checkCreatedFile(f);
     }
 
     @Test
-    public void initRelativePathEndingSeparator() {
-        new InitCommand(new String[]{XatkitCommand.INIT.label, TEST_FOLDER_LOCATION + "/"});
+    public void executeRelativePathEndingSeparator() {
+        InitCommand command = new InitCommand(new String[]{XatkitCommandType.INIT.label, TEST_FOLDER_LOCATION + "/"},
+                new CommandContext());
+        command.execute();
         File f = new File(TEST_FOLDER_LOCATION);
         checkCreatedFile(f);
     }
 
     @Test
-    public void initAbsolutePath() {
+    public void executeAbsolutePath() {
         File f = new File(TEST_FOLDER_LOCATION);
-        new InitCommand(new String[]{XatkitCommand.INIT.label, f.getAbsolutePath()});
+        InitCommand command = new InitCommand(new String[]{XatkitCommandType.INIT.label, f.getAbsolutePath()},
+                new CommandContext());
+        command.execute();
         checkCreatedFile(f);
     }
 
