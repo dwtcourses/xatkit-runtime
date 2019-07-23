@@ -49,10 +49,10 @@ public class XatkitShell {
         } else {
             Log.info("Welcome to Xatkit shell!");
         }
-        String line = null;
+        String line;
         while (nonNull(line = console.readLine())) {
             String[] command = line.split("\\s");
-            if (nonNull(command) && command.length > 0) {
+            if (command.length > 0) {
                 switch (command[0]) {
                     case "init":
                         executeCommand(new InitCommand(command, context));
