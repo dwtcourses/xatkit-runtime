@@ -1,7 +1,9 @@
 package com.xatkit.core.recognition;
 
 import com.xatkit.core.XatkitCore;
+import com.xatkit.core.XatkitException;
 import com.xatkit.core.recognition.dialogflow.DialogFlowApi;
+import com.xatkit.core.recognition.grammar.BPMNGrammarApi;
 import com.xatkit.core.session.XatkitSession;
 import com.xatkit.intent.IntentDefinition;
 import com.xatkit.intent.RecognizedIntent;
@@ -65,6 +67,12 @@ public class IntentRecognitionProviderFactory {
              * The provided configuration contains DialogFlow-related information.
              */
             return new DialogFlowApi(xatkitCore, configuration, recognitionMonitor);
+        } else if (configuration.containsKey(BPMNGrammarApi.GRAMMAR_PROVIDER_KEY)) {
+            if (configuration.getString(BPMNGrammarApi.GRAMMAR_PROVIDER_KEY).equals(BPMNGrammarApi.BPMN_GRAMMAR_VALUE)) {
+                return new BPMNGrammarApi(xatkitCore, configuration, recognitionMonitor);
+            } else {
+                throw new XatkitException("Cannot create the grammar provider");
+            }
         } else {
             /*
              * The provided configuration does not contain any IntentRecognitionProvider information, returning a
