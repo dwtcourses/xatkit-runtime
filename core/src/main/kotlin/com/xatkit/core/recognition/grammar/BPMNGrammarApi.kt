@@ -54,7 +54,7 @@ class BPMNGrammarApi(private val xatkitCore: XatkitCore, private val configurati
     override fun getIntent(input: String, session: XatkitSession): RecognizedIntent {
         val request: BaseRequest = Unirest.post(bpmnGrammarServerUrl)
                 .header("Content-Type", "application/json")
-                .body(buildJsonRequest(input, session.sessionId))
+                .body(buildJsonRequest(input, session))
 
         val response: HttpResponse<InputStream> = request.asBinary()
         val status: Int = response.status
@@ -94,19 +94,31 @@ class BPMNGrammarApi(private val xatkitCore: XatkitCore, private val configurati
         session.store("intent-style", intentStyleMap)
     }
 
-    private fun buildJsonRequest(message: String, sessionId: String): String {
+    private fun buildJsonRequest(message: String, session: XatkitSession): String {
+        var activityLabels: String? = (session.get("activity-labels") as List<String>?)?.joinToString(prefix = "[",
+                postfix = "]", separator = ",", transform = { "\"$it\"" })
+        if (activityLabels == null) {
+            activityLabels = """["A", "B", "C"]"""
+            Log.warn("The session doesn't contain the activity-labels entry, using default value $activityLabels")
+        }
+        var activityAliases: String? = (session.get("activity-aliases") as List<Int>?)?.joinToString(prefix =
+        "[", postfix = "]", separator = ",", transform = { it.toString() })
+        if(activityAliases == null) {
+            activityAliases = """[1,2,3]"""
+            Log.warn("The session doesn't contain the activity-labels entry, using default value $activityAliases")
+        }
         val jsonRequest: String = """
             { 
                 "message": "$message", 
                 "context": {
                     "language": "EN",
-                    "activity-labels": ["A", "B", "C"],
-                    "activity-aliases": [0,1,2],
-                    "session-id": "$sessionId"
+                    "activity-labels": $activityLabels,
+                    "activity-aliases": $activityAliases,
+                    "session-id": "${session.sessionId}"
                 }
             }
         """.trimIndent()
-        Log.info("JSON Request : $jsonRequest")
+        Log.info("JSON Request : {0}", jsonRequest)
         return jsonRequest
     }
 
