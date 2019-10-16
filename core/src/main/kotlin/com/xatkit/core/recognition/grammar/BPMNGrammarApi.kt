@@ -187,12 +187,25 @@ class BPMNGrammarApi(private val xatkitCore: XatkitCore, private val configurati
 
     private fun setLoadModelContext(recognizedIntent: RecognizedIntent, intentDefinition: IntentDefinition,
                                     jsonParams: JsonArray) {
-        this.setModelNameContext(recognizedIntent, intentDefinition, jsonParams)
+        val contextDefinition: Context = intentDefinition.getOutContext("Model")!!
+        val contextInstance: ContextInstance = contextDefinition.createInstance()
+
+        val jsonNameValue: String = jsonParams.getInnerListWithKey("NAME")!![0].asString
+        val contextParameterValue: ContextParameterValue = contextDefinition.getContextParameter("name").createValue(jsonNameValue)
+        contextInstance.values.add(contextParameterValue)
+        recognizedIntent.outContextInstances.add(contextInstance)
     }
 
     private fun setSaveModelContext(recognizedIntent: RecognizedIntent, intentDefinition: IntentDefinition,
                                     jsonParams: JsonArray) {
-        this.setModelNameContext(recognizedIntent, intentDefinition, jsonParams)
+        val contextDefinition: Context = intentDefinition.getOutContext("Model")!!
+        val contextInstance: ContextInstance = contextDefinition.createInstance()
+
+        // Accept null values, save can be matched without a model name
+        val jsonNameValue: String? = jsonParams.getInnerListWithKey("NAME")?.get(0)?.asString
+        val contextParameterValue: ContextParameterValue = contextDefinition.getContextParameter("name").createValue(jsonNameValue ?: "")
+        contextInstance.values.add(contextParameterValue)
+        recognizedIntent.outContextInstances.add(contextInstance)
     }
 
     private fun setRenameActivityContext(recognizedIntent: RecognizedIntent, intentDefinition: IntentDefinition,
@@ -366,17 +379,6 @@ class BPMNGrammarApi(private val xatkitCore: XatkitCore, private val configurati
 
     private val JsonObject.parameters: JsonArray
         get() = this.getAsJsonArray("parameters")!!
-
-    private fun setModelNameContext(recognizedIntent: RecognizedIntent, intentDefinition: IntentDefinition,
-                                    jsonParams: JsonArray) {
-        val contextDefinition: Context = intentDefinition.getOutContext("Model")!!
-        val contextInstance: ContextInstance = contextDefinition.createInstance()
-
-        val jsonNameValue: String = jsonParams.getInnerListWithKey("NAME")!![0].asString
-        val contextParameterValue: ContextParameterValue = contextDefinition.getContextParameter("name").createValue(jsonNameValue)
-        contextInstance.values.add(contextParameterValue)
-        recognizedIntent.outContextInstances.add(contextInstance)
-    }
 
     private fun Context.createInstance(lifespanCount: Int = 5): ContextInstance {
         val contextInstance: ContextInstance = factory.createContextInstance()
